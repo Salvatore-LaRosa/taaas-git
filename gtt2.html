@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Orari Pulman</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 20px;
+        }
+        #bus-schedule {
+            margin-top: 20px;
+        }
+        .bus-item {
+            margin: 5px 0;
+        }
+        .realtime {
+            color: red;
+        }
+    </style>
+</head>
+<body>
+
+<h1>Orari dei Pulman</h1>
+
+<label for="stop">Inserisci fermata:</label>
+<input type="text" id="stop" name="stop">
+<button onclick="getBusSchedule()">Cerca Orari</button>
+
+<div id="bus-schedule"></div>
+
+<script>
+    async function getBusSchedule() {
+        const stop = document.getElementById('stop').value.trim();
+        if (!stop) {
+            alert("Per favore inserisci una fermata.");
+            return;
+        }
+
+        try {
+            const response = await fetch(`http://gpa.madbob.org/query.php?stop=${stop}`);
+            const data = await response.json();
+
+            const scheduleContainer = document.getElementById('bus-schedule');
+            scheduleContainer.innerHTML = ''; // Reset the schedule
+
+            if (data.length === 0) {
+                scheduleContainer.innerHTML = 'Nessun orario disponibile per questa fermata.';
+                return;
+            }
+
+            data.forEach(item => {
+                const busItem = document.createElement('div');
+                busItem.classList.add('bus-item');
+
+                let busText = `Linea: ${item.line} - Orario: ${item.hour}`;
+                if (item.realtime === 'true') {
+                    busText += ' <span class="realtime">*</span>';
+                }
+
+                busItem.innerHTML = busText;
+                scheduleContainer.appendChild(busItem);
+            });
+        } catch (error) {
+            alert('Errore durante il caricamento degli orari. Riprova più tardi.');
+            console.error(error);
+        }
+    }
+</script>
+
+</body>
+</html>
+
