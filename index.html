@@ -8,6 +8,7 @@
         body {
             background-color: yellow;
             display: flex;
+            flex-direction: column;
             justify-content: center;
             align-items: center;
             height: 100vh;
@@ -21,5 +22,13 @@
 </head>
 <body>
     <h1>Titolo Centrale</h1>
+    <p>Line: <span id="line"></span></p>
+    <p>Hour: <span id="hour"></span></p>
+    <p>Realtime: <span id="realtime"></span></p>
+    <script>
+        document.getElementById("line").textContent = "Linea 1";
+        document.getElementById("hour").textContent = new Date().toLocaleTimeString();
+        document.getElementById("realtime").textContent = new Date().toLocaleString();
+    </script>
 </body>
 </html>
